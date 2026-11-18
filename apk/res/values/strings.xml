@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_desc">Native Hook 常驻存活用，不读取屏幕内容、不接管操作</string>
+</resources>
