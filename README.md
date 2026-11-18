@@ -234,6 +234,20 @@ dpi ≈ 320 × video_w / 1080
 | `/data/local/tmp/hook-native/nhkeepd.log` | 守护进程日志（512 KB 滚动） |
 | `/data/data/com.changan.nativehook/files/logs/keepalive-*.log` | App 侧巡检日志 |
 
+### 部署清单里为什么有 17 个文件
+
+App 的部署清单写死在 [`NativeHook.ASSETS`](apk/src/com/changan/nativehook/NativeHook.java)，
+一共 17 项。分清楚哪来的，就不会以为仓库缺东西：
+
+| 来源 | 文件 | 说明 |
+|---|---|---|
+| **本仓库构建**（11 项） | `nhinject`、`liblsplant.so`、`libnhpayload.so`、4 个 `modules/*.so`、`nhkeepd`、3 个 `.sh` | `payload/` `injector/` `daemon/` `apk/scripts/` 编出来。`liblsplant.so` 由 `fetch-deps.sh` 拉取 |
+| **`root-term` 项目**（2 项） | `rt_shell`、`rt_httpd` | 4455 root shell 与 4466 文件管理页，是独立的通道程序 |
+| **`evs-dvr` 项目**（4 项） | `evsdvr`、`libevsdvr.so`、`boot.sh`、`run.sh` | 后摄循环录像，跑在纯 native 的 `evsserver` 里，走 GOT 覆盖 |
+
+后 6 项属于另外两个项目，不在本仓库。缺了它们 hook 部分照样工作，
+只是 4455/4466 通道和后摄记录仪不可用。
+
 ## 排障
 
 | 现象 | 原因 | 状态 |
